@@ -3,12 +3,12 @@
 
 
 def canUnlockAll(boxes):
-    """function that determines if all the boxes can be opened"""
-    openboxes = [0]
-    for key in openboxes:
+    """Determines if all the boxes can be opened."""
+    open_boxes = [0]
+
+    for key in open_boxes:
         for box in boxes[key]:
-            if box not in openboxes and box < len(boxes):
-                openboxes.append(box)
-    if len(openboxes) == len(boxes):
-        return True
-    return False
+            if box not in open_boxes and 0 <= box < len(boxes):
+                open_boxes.append(box)
+
+    return len(open_boxes) == len(boxes)
