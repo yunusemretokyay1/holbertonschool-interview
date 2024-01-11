@@ -3,41 +3,42 @@
 #include "lists.h"
 
 /**
- * insert_node - insert node into position
- * @head: head of linked list
- * @number: value
+ * insert_node - insert node into sorted linked list
+ * @head: pointer to the head of the linked list
+ * @number: value to be inserted
  * Return: Pointer to the new node
  */
-
 listint_t *insert_node(listint_t **head, int number)
 {
-	listint_t *current;
-	listint_t *newNode;
+    listint_t *current = *head;
+    listint_t *newNode;
 
-	newNode = malloc(sizeof(*newNode));
-	if (!newNode)
-		return (NULL);
-	newNode->n = number;
+    // Allocate memory for the new node
+    newNode = malloc(sizeof(*newNode));
+    if (!newNode)
+        return NULL;
 
-	/* special case for the head end*/
-	if (*head == NULL || (*head)->n >= newNode->n)
-	{
-		newNode->next = *head;
-		*head = newNode;
-		return (newNode);
-	}
+    // Set the value of the new node
+    newNode->n = number;
+    newNode->next = NULL;
 
-	/* locate the node before the point of insertion*/
-	for (current = *head; current != NULL; current = current->next)
-	{
-		if (current->next == NULL || current->next->n > newNode->n)
-		{
+    // Special case for the head end
+    if (*head == NULL || (*head)->n >= newNode->n)
+    {
+        newNode->next = *head;
+        *head = newNode;
+        return newNode;
+    }
 
-			newNode->next = current->next;
-			current->next = newNode;
-			break;
-		}
-	}
+    // Locate the node before the point of insertion
+    while (current->next != NULL && current->next->n < newNode->n)
+    {
+        current = current->next;
+    }
 
-	return (newNode);
+    // Insert the new node at the correct position
+    newNode->next = current->next;
+    current->next = newNode;
+
+    return newNode;
 }
