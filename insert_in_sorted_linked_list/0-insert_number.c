@@ -1,44 +1,38 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "lists.h"
+#include <stdlib.h>
 
 /**
- * insert_node - insert node into sorted linked list
- * @head: pointer to the head of the linked list
- * @number: value to be inserted
- * Return: Pointer to the new node
+ * insert_node - Inserts new node with 'number' as its
+ * 'n' attribute, in its correct spot in the linked list
+ * pointed to by 'head';
+ * 'head' IS ASSUMED TO BE A SORTED LINKED LIST OF INTS,
+ * IN ASCENDING ORDER.
+ *
+ * @head: pointer to head pointer of linked list of integers,
+ * SORTED IN ASCENDING ORDER. Each node is assumed to be of type
+ * 'listint_t'
+ * @number: number to put in new node, and to insert
+ * in the linked list pointed to by 'head', in its correct position
+ *
+ * Return: the address of the new node if the memory allocation
+ * was successful, NULL otherwise.
  */
 listint_t *insert_node(listint_t **head, int number)
 {
-    listint_t *current = *head;
-    listint_t *newNode;
+	listint_t *number_node = malloc(sizeof(listint_t));
+	listint_t **current = head;
 
-    // Allocate memory for the new node
-    newNode = malloc(sizeof(*newNode));
-    if (!newNode)
-        return NULL;
+	/* memory failed */
+	if (number_node == NULL)
+		return (NULL);
 
-    // Set the value of the new node
-    newNode->n = number;
-    newNode->next = NULL;
+	while (*current && (**current).n < number)
+		current = &(**current).next;
 
-    // Special case for the head end
-    if (*head == NULL || (*head)->n >= newNode->n)
-    {
-        newNode->next = *head;
-        *head = newNode;
-        return newNode;
-    }
+	number_node->n = number;
+	number_node->next = *current;
 
-    // Locate the node before the point of insertion
-    while (current->next != NULL && current->next->n < newNode->n)
-    {
-        current = current->next;
-    }
+	*current = number_node;
 
-    // Insert the new node at the correct position
-    newNode->next = current->next;
-    current->next = newNode;
-
-    return newNode;
+	return (number_node);
 }
