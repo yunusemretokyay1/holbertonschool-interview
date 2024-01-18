@@ -1,95 +1,99 @@
 #include "binary_trees.h"
-
 /**
- * heap_end - Returns the address of the pointer
- * to where the next unoccupied slot of the heap
- * is
+ * binary_tree_size - goes through a binary tree using pre-order traversal
+ * @tree: parent of node.
+ * Return: nothing.
  */
-heap_t **heap_end(heap_t **root, int value)
+size_t binary_tree_size(const binary_tree_t *tree)
 {
-	if (root == NULL)
-		return (NULL);
+	size_t size;
 
-	heap_t **left = heap_end((*root)->left);
-	heap_t **right = heap_end((*root)->right);
-
-	if (*left == NULL)
-		return (*left);
-	if (*right == NULL)
-		return (*right);
+	if (!tree)
+		return (0);
+	size = 1 + binary_tree_size(tree->left) + binary_tree_size(tree->right);
+	return (size);
 }
-
 /**
- * heap_insert_place - Returns the address of the pointer
- * to where the new node should be inserted
+ * numtostr - converts number to string
+ * @num: size of tree
+ * @base: base to convert
+ * Return: result string
  */
-heap_t **heap_insert_place(heap_t **root, int value) {
-	if (root == NULL)
-		return (NULL);
+char *numtostr(unsigned long int num, int base)
+{
+	static char *repre, buff[50];
+	char *binary;
 
-	heap_t **left = heap_end((*root));
+	repre = "01";
+
+	binary = &buff[49];
+	*binary = 0;
+
+	while (num)
+	{
+		binary--;
+		*binary = repre[num % base];
+		num /= base;
+	}
+	return (binary);
 }
-
 /**
- * heap_insert - TRIES TO:
- * Create a new 'heap_t' type node with:
- * 'value' as its 'n', into its correct place in
- * the heap pointed to by 'root'.
- *
- * USING MAX-HEAP ORDERING.
- *
- * By 'heap' I mean all of the nodes of the heap
- * AND THE POINTER TO THE ROOT NODE, WHICH MAY EVEN BE NULL.
- *
- * THIS MEANS THAT IF '*root' is NULL, THE NEW NODE WILL
- * BECOME THE ROOT NODE OF THE HEAP!!!
- *
- * If 'root' is NULL or if the malloc FAILS,
- * This function just returns NULL.
- *
- * @root: pointer to (L-VALUE!!) pointer to root
- * @value: int to insert into heap into correct place
- *
- * Return: pointer to new heap node
- * (in its correct place in the heap)
- * if malloc was successful,
- * NULL otherwise
+ * insert_node - insert the new node to correct position
+ * @root: double pointer to root of max heap
+ * @node: new node to insert
+ */
+void insert_node(heap_t **root, heap_t *node)
+{
+	char bin, *binary;
+	unsigned int idx, size;
+	heap_t *aux = NULL;
+
+	aux = *root;
+	size = binary_tree_size(aux) + 1;
+	binary = numtostr(size, 2);
+	for (idx = 1; idx < strlen(binary); idx++)
+	{
+		bin = binary[idx];
+		if (idx == strlen(binary) - 1)
+		{
+			if (bin == '1')
+				aux->right = node;
+			if (bin == '0')
+				aux->left = node;
+			node->parent = aux;
+		}
+		else if (bin == '1')
+			aux = aux->right;
+		else if (bin == '0')
+			aux = aux->left;
+	}
+}
+/**
+ * heap_insert - inserts a value into a Max Binary Heap
+ * @root: a double pointer to the root node of the Heap
+ * @value: value store in the node to be inserted
+ * Return: a pointer to the inserted node, or NULL on failure
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-	if (root == NULL)
+	heap_t *new_node = NULL;
+	int n;
+
+	if (!root)
 		return (NULL);
-
-	/* make node */
-
-	heap_t *new = malloc(sizeof(heap_t));
-
-	if (new == NULL)
-		return (NULL);
-
-	new->n = value;
-	new->parent = NULL;
-	new->left = NULL;
-	new->right = NULL;
-
-	/* find place to insert node */
-
-	heap_t **insert_place = root;
-
-	while (*insert_place != NULL
-		&& insert_place->n > value)
+	new_node = binary_tree_node(NULL, value);
+	if (!(*root))
 	{
-
-		insert_place = (*insert_place)->
+		*root = new_node;
+		return (new_node);
 	}
-
-	heap_t *insert_place_parent = (*insert_place)->parent;
-	heap_t *insert_place_left = (*insert_place)->left;
-	heap_t *insert_place_right = (*insert_place)->right;
-
-	new->parent = insert_place_parent;
-	new->left = insert_place_left;
-	new->right = insert_place_right;
-
-	(*insert_place)
+	insert_node(root, new_node);
+	while (new_node->parent && new_node->n > new_node->parent->n)
+	{
+		n = new_node->parent->n;
+		new_node->parent->n = new_node->n;
+		new_node->n = n;
+		new_node = new_node->parent;
+	}
+	return (new_node);
 }
