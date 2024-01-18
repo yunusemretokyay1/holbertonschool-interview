@@ -1,95 +1,34 @@
 #include "binary_trees.h"
+#include <stdlib.h>
 
 /**
- * heap_end - Returns the address of the pointer
- * to where the next unoccupied slot of the heap
- * is
+ * binary_tree_node - TRIES TO:
+ * create new binary_tree_t type node in memory,
+ * with: 'value' as its 'n' int attribute, 'parent' as its 'parent'
+ * (even if 'parent' is NULL),
+ * and NULL children; and return its address.
+ *
+ * If allocating it in memory fails, this function just returns
+ * NULL.
+ *
+ * @parent: parent of the new node
+ * @value: What the 'n' int attribute of the new node will be
+ *
+ * Return: address of created node if the malloc was successful,
+ * NULL otherwise.
  */
-heap_t **heap_end(heap_t **root, int value)
+binary_tree_t *binary_tree_node(binary_tree_t *parent, int value)
 {
-	if (root == NULL)
+	binary_tree_t *result = malloc(sizeof(binary_tree_t));
+
+	/* malloc failed */
+	if (result == NULL)
 		return (NULL);
 
-	heap_t **left = heap_end((*root)->left);
-	heap_t **right = heap_end((*root)->right);
+	result->n = value;
+	result->parent = parent;
+	result->left = NULL;
+	result->right = NULL;
 
-	if (*left == NULL)
-		return (*left);
-	if (*right == NULL)
-		return (*right);
-}
-
-/**
- * heap_insert_place - Returns the address of the pointer
- * to where the new node should be inserted
- */
-heap_t **heap_insert_place(heap_t **root, int value) {
-	if (root == NULL)
-		return (NULL);
-
-	heap_t **left = heap_end((*root));
-}
-
-/**
- * heap_insert - TRIES TO:
- * Create a new 'heap_t' type node with:
- * 'value' as its 'n', into its correct place in
- * the heap pointed to by 'root'.
- *
- * USING MAX-HEAP ORDERING.
- *
- * By 'heap' I mean all of the nodes of the heap
- * AND THE POINTER TO THE ROOT NODE, WHICH MAY EVEN BE NULL.
- *
- * THIS MEANS THAT IF '*root' is NULL, THE NEW NODE WILL
- * BECOME THE ROOT NODE OF THE HEAP!!!
- *
- * If 'root' is NULL or if the malloc FAILS,
- * This function just returns NULL.
- *
- * @root: pointer to (L-VALUE!!) pointer to root
- * @value: int to insert into heap into correct place
- *
- * Return: pointer to new heap node
- * (in its correct place in the heap)
- * if malloc was successful,
- * NULL otherwise
- */
-heap_t *heap_insert(heap_t **root, int value)
-{
-	if (root == NULL)
-		return (NULL);
-
-	/* make node */
-
-	heap_t *new = malloc(sizeof(heap_t));
-
-	if (new == NULL)
-		return (NULL);
-
-	new->n = value;
-	new->parent = NULL;
-	new->left = NULL;
-	new->right = NULL;
-
-	/* find place to insert node */
-
-	heap_t **insert_place = root;
-
-	while (*insert_place != NULL
-		&& insert_place->n > value)
-	{
-
-		insert_place = (*insert_place)->
-	}
-
-	heap_t *insert_place_parent = (*insert_place)->parent;
-	heap_t *insert_place_left = (*insert_place)->left;
-	heap_t *insert_place_right = (*insert_place)->right;
-
-	new->parent = insert_place_parent;
-	new->left = insert_place_left;
-	new->right = insert_place_right;
-
-	(*insert_place)
+	return (result);
 }
