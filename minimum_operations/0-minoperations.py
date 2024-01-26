@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 """
-Calculates the fewest number of operations needed to result
+calculates the fewest number of operations needed to result
 in exactly n H characters in the file.
+
 """
 
 
-def min_operations(n):
+def minOperations(n):
     operation_count = 0
     number = 2
     if type(n) is not int or n <= 1:
@@ -16,4 +17,4 @@ def min_operations(n):
             n /= number
         else:
             number += 1
-    return operation_count
+    return(operation_count)
