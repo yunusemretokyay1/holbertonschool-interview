@@ -1,5 +1,12 @@
+/*
+ * This file was provided by Holberton,
+ * and this lesson was made by Carrie Ybay,
+ * Software Engineer at Holberton School.
+ */
 #ifndef LISTS_H
 #define LISTS_H
+
+#include <stddef.h>
 
 /**
  * struct listint_s - singly linked list
