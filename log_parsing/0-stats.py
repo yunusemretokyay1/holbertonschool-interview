@@ -1,41 +1,39 @@
 #!/usr/bin/python3
+"""reads stdin line by line and computes metric
+"""
+from sys import stdin
 
-""" reads stdin line by line and computes metric"""
+
+codes = {'200': 0, '301': 0, '400': 0, '401': 0,
+         '403': 0, '404': 0, '405': 0, '500': 0}
+size = 0
+
+
+def print_info():
+    """print_info method print needed info
+
+    Args:
+        codes (dict): code status
+        size (int): size of files
+    """
+    print("File size: {}".format(size))
+    for key, val in sorted(codes.items()):
+        if val > 0:
+            print("{}: {}".format(key, val))
 
 if __name__ == '__main__':
-    def printer(file_size, status):
-        '''Print logs'''
-        print("File size: {:d}".format(file_size))
-        for i in sorted(status.keys()):
-            if status[i] != 0:
-                print("{}: {}".format(i, status[i]))
-
-    file_size = 0
-    status = {"200": 0, "301": 0, "400": 0, "401": 0,
-              "403": 0, "404": 0, "405": 0, "500": 0}
-
-    counter = 0
     try:
-        with open(0) as f:
-            for line in f:
-                counter += 1
-                data = line.split()
-
-                try:
-                    file_size += int(data[-1])
-                except Exception:
-                    pass
-
-                try:
-                    st = data[-2]
-                    if st in status:
-                        status[st] += 1
-
-                except Exception:
-                    pass
-                if counter % 10 == 0:
-                    printer(file_size, status)
-            printer(file_size, status)
+        for i, line in enumerate(stdin, 1):
+            try:
+                info = line.split()
+                size += int(info[-1])
+                if info[-2] in codes.keys():
+                    codes[info[-2]] += 1
+            except:
+                pass
+            if not i % 10:
+                print_info()
     except KeyboardInterrupt:
-        printer(file_size, status)
+        print_info()
         raise
+    print_info()
