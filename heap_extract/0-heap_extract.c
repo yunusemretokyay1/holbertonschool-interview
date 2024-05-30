@@ -25,6 +25,7 @@ size_t tree_height(const heap_t *tree)
 		return (height_l);
 	return (height_r);
 }
+
 /**
  * tree_size_h - measures the sum of heights of a binary tree
  * @tree: pointer to the root node of the tree to measure the height
@@ -51,7 +52,7 @@ size_t tree_size_h(const binary_tree_t *tree)
 /**
  * _preorder - goes through a binary tree using pre-order traversal
  * @tree: pointer to the root node of the tree to traverse
- * @node: will be last note in traverse
+ * @node: will be last node in traverse
  * @height: height of tree
  *
  * Return: No Return
